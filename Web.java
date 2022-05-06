@@ -134,8 +134,8 @@ public class Web extends Application {
             String url = urlField.getText();
 
             if (!url.contains(".")) {
-                webView.getEngine().load("https://www.google.com/search?q=" + url);
-                return;
+                url ="https://www.google.com/search?q=" + url;
+                
             } else if (!url.startsWith("http://") && !url.startsWith("https://")) {
                 url = "https://" + url;
             }
@@ -195,7 +195,7 @@ public class Web extends Application {
             }
         });
 
-        anchorPane.setOnKeyPressed(new EventHandler<KeyEvent>() {
+        urlField.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
             @Override
             public void handle(KeyEvent event) {
@@ -203,17 +203,19 @@ public class Web extends Application {
                     String url = urlField.getText();
 
                     if (!url.contains(".")) {
-                        webView.getEngine().load("https://www.google.com/search?q=" + url);
-                        return;
+                        url ="https://www.google.com/search?q=" + url;
+                        
                     } else if (!url.startsWith("http://") && !url.startsWith("https://")) {
                         url = "https://" + url;
                     }
-
+                    //System.out.println(url);
                     webView.getEngine().load(url);
                     pane.getChildren().setAll(webView);
                     getURL(url);
                 }
+                
             }
+            
         });
 
         /////// ------ Display ------ ///////
