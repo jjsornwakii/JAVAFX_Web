@@ -6,9 +6,9 @@
 // 3.ศิวกร สุริยะ           64010850
 // 4.สิรภพ แสงมี          64010893
 
-import java.io.Serializable;
 import org.w3c.dom.Node;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Border;
@@ -22,11 +22,14 @@ import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
 
-public class Web extends Application implements Serializable {
+public class Web extends Application {
 
     String str = "http://google.com";
     Node node;
@@ -50,7 +53,7 @@ public class Web extends Application implements Serializable {
         webView.setPrefWidth(prefW);
 
         webengine.load("http://www.google.com/");
-        
+
         WebHistory webHistory = webengine.getHistory();
 
         Pane pane = new Pane();
@@ -105,28 +108,23 @@ public class Web extends Application implements Serializable {
         AnchorPane.setTopAnchor(searchBtn, 7.0);
         AnchorPane.setRightAnchor(searchBtn, 90.0);
 
-
         AnchorPane.setTopAnchor(inspectBtn, 7.0);
         AnchorPane.setRightAnchor(inspectBtn, 10.0);
 
-
         AnchorPane.setTopAnchor(reBtn, 7.0);
         AnchorPane.setLeftAnchor(reBtn, 120.0);
-        
 
         AnchorPane.setTopAnchor(backBtn, 7.0);
         AnchorPane.setLeftAnchor(backBtn, 10.0);
-        
 
         AnchorPane.setTopAnchor(nextBtn, 7.0);
         AnchorPane.setLeftAnchor(nextBtn, 65.0);
-        
 
         AnchorPane.setTopAnchor(pane, 55.0);
         AnchorPane.setBottomAnchor(pane, 0.0);
         AnchorPane.setLeftAnchor(pane, 0.0);
         AnchorPane.setRightAnchor(pane, 0.0);
-        
+
         pane.getChildren().setAll(webView);
 
         /////// ------ Action ------ ///////
@@ -134,6 +132,13 @@ public class Web extends Application implements Serializable {
         searchBtn.setOnAction(e -> {
 
             String url = urlField.getText();
+
+            if (!url.contains(".")) {
+                webView.getEngine().load("https://www.google.com/search?q=" + url);
+                return;
+            } else if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                url = "https://" + url;
+            }
 
             webView.getEngine().load(url);
             pane.getChildren().setAll(webView);
@@ -183,6 +188,34 @@ public class Web extends Application implements Serializable {
             }
         });
 
+        webView.setOnMousePressed((EventHandler<? super MouseEvent>) new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                urlField.setText(webengine.getLocation());
+            }
+        });
+
+        anchorPane.setOnKeyPressed(new EventHandler<KeyEvent>() {
+
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.ENTER) {
+                    String url = urlField.getText();
+
+                    if (!url.contains(".")) {
+                        webView.getEngine().load("https://www.google.com/search?q=" + url);
+                        return;
+                    } else if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                        url = "https://" + url;
+                    }
+
+                    webView.getEngine().load(url);
+                    pane.getChildren().setAll(webView);
+                    getURL(url);
+                }
+            }
+        });
+
         /////// ------ Display ------ ///////
 
         anchorPane.getChildren().addAll(urlField, pane, searchBtn, inspectBtn, reBtn, backBtn, nextBtn);
@@ -208,4 +241,5 @@ public class Web extends Application implements Serializable {
     public void getPrefW(double w) {
         prefW = w;
     }
+
 }
