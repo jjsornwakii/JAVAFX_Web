@@ -17,7 +17,8 @@
             "name": "Launch Web",
             "request": "launch",
             "mainClass": "Web",
-            "projectName": "Final_Project_2b138c4d"
+            "projectName": "Final_Project_2b138c4d",
+            "vmArgs": "--module-path \"javafx-sdk-17.0.2/lib\" --add-modules javafx.controls,javafx.fxml --add-modules javafx.controls,javafx.fxml,javafx.web",
         }
     ]
 }
